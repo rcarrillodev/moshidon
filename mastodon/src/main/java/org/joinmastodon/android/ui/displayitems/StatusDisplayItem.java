@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import org.joinmastodon.android.GlobalUserPreferences;
 import org.joinmastodon.android.R;
 import org.joinmastodon.android.api.requests.accounts.GetAccountRelationships;
 import org.joinmastodon.android.api.requests.search.GetSearchResults;
@@ -315,7 +316,7 @@ public abstract class StatusDisplayItem{
 					mediaGrid.sensitiveTitle=fragment.getString(R.string.media_hidden);
 					statusForContent.sensitiveRevealed=false;
 					statusForContent.sensitive=true;
-				}else if(statusForContent.sensitive && AccountSessionManager.get(accountID).getLocalPreferences().revealCWs && !AccountSessionManager.get(accountID).getLocalPreferences().hideSensitiveMedia)
+				}else if(statusForContent.sensitive &&  !GlobalUserPreferences.hideSensitiveMedia)
 					statusForContent.sensitiveRevealed=true;
 				contentItems.add(mediaGrid);
 			}

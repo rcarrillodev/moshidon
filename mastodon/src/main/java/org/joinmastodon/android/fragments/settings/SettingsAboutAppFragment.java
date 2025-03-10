@@ -36,7 +36,6 @@ import org.joinmastodon.android.model.viewmodel.ListItem;
 import org.joinmastodon.android.ui.M3AlertDialogBuilder;
 import org.joinmastodon.android.ui.Snackbar;
 import org.joinmastodon.android.ui.utils.UiUtils;
-import org.joinmastodon.android.updater.GithubSelfUpdater;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -93,10 +92,6 @@ public class SettingsAboutAppFragment extends BaseSettingsFragment<Void> impleme
 				new ListItem<>(getString(R.string.sk_settings_clear_timeline_cache), session.domain, this::onClearTimelineCacheClick),
 				copyCrashLogItem=new ListItem<>(getString(R.string.sk_settings_copy_crash_log), lastModified, 0, this::onCopyCrashLog)
 		));
-
-		if(GithubSelfUpdater.needSelfUpdating() && !BuildConfig.BUILD_TYPE.equals("nightly") ){
-			items.add(enablePreReleasesItem=new CheckableListItem<>(R.string.sk_updater_enable_pre_releases, 0, CheckableListItem.Style.SWITCH, GlobalUserPreferences.enablePreReleases, i->toggleCheckableItem(enablePreReleasesItem)));
-		}
 
 		copyCrashLogItem.isEnabled=crashLogFile.exists();
 		onDataLoaded(items);

@@ -60,26 +60,9 @@ public class MastodonAPIController{
 			.build();
 
 	private AccountSession session;
-	private static List<String> badDomains = new ArrayList<>();
 
 	static{
 		thread.start();
-		try {
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(
-					MastodonApp.context.getAssets().open("blocks.txt")
-			));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.isBlank() || line.startsWith("#")) continue;
-				String[] parts = line.replaceAll("\"", "").split("[\s,;]");
-				if (parts.length == 0) continue;
-				String domain = parts[0].toLowerCase().trim();
-				if (domain.isBlank()) continue;
-				badDomains.add(domain);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public MastodonAPIController(@Nullable AccountSession session){

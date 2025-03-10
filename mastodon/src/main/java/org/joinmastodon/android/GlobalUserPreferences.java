@@ -81,6 +81,7 @@ public class GlobalUserPreferences{
 	public static boolean showPostsWithoutAlt;
 	public static boolean showMediaPreview;
 	public static boolean removeTrackingParams;
+	public static boolean hideSensitiveMedia;
 
 	public static SharedPreferences getPrefs(){
 		return MastodonApp.context.getSharedPreferences("global", Context.MODE_PRIVATE);
@@ -116,6 +117,7 @@ public class GlobalUserPreferences{
 		confirmUnfollow=prefs.getBoolean("confirmUnfollow", true);
 		confirmBoost=prefs.getBoolean("confirmBoost", false);
 		confirmDeletePost=prefs.getBoolean("confirmDeletePost", true);
+		hideSensitiveMedia=prefs.getBoolean("hideSensitive", true);
 
 		// MEGALODON
 		trueBlackTheme=prefs.getBoolean("trueBlackTheme", false);
@@ -221,6 +223,7 @@ public class GlobalUserPreferences{
 				.putBoolean("underlinedLinks", underlinedLinks)
 				.putString("color", color.name())
 				.putBoolean("likeIcon", likeIcon)
+				.putBoolean("hideSensitive", hideSensitiveMedia)
 
 				// MOSHIDON
 				.putBoolean("defaultToUnlistedReplies", defaultToUnlistedReplies)

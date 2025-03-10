@@ -1,21 +1,16 @@
 package org.joinmastodon.android;
 
 import static org.joinmastodon.android.fragments.ComposeFragment.CAMERA_PERMISSION_CODE;
-import static org.joinmastodon.android.fragments.ComposeFragment.CAMERA_PIC_REQUEST_CODE;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.assist.AssistContent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.net.Uri;
 import android.os.BadParcelableException;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,7 +21,6 @@ import org.joinmastodon.android.api.requests.search.GetSearchResults;
 import org.joinmastodon.android.api.session.AccountSession;
 import org.joinmastodon.android.api.session.AccountSessionManager;
 import org.joinmastodon.android.events.TakePictureRequestEvent;
-import org.joinmastodon.android.fragments.ComposeFragment;
 import org.joinmastodon.android.fragments.HomeFragment;
 import org.joinmastodon.android.fragments.ProfileFragment;
 import org.joinmastodon.android.fragments.ThreadFragment;
@@ -35,7 +29,6 @@ import org.joinmastodon.android.fragments.onboarding.CustomWelcomeFragment;
 import org.joinmastodon.android.model.Notification;
 import org.joinmastodon.android.model.SearchResults;
 import org.joinmastodon.android.ui.utils.UiUtils;
-import org.joinmastodon.android.updater.GithubSelfUpdater;
 import org.joinmastodon.android.utils.ProvidesAssistContent;
 import org.parceler.Parcels;
 
@@ -80,10 +73,6 @@ public class MainActivity extends FragmentStackActivity implements ProvidesAssis
 
 		if(savedInstanceState==null){
 			restartHomeFragment();
-		}
-
-		if(GithubSelfUpdater.needSelfUpdating()){
-			GithubSelfUpdater.getInstance().maybeCheckForUpdates();
 		}
 	}
 

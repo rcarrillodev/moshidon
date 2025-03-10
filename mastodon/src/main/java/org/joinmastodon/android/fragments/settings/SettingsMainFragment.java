@@ -5,23 +5,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.otto.Subscribe;
-
 import org.joinmastodon.android.BuildConfig;
 import org.joinmastodon.android.E;
 import org.joinmastodon.android.MainActivity;
 import org.joinmastodon.android.R;
 import org.joinmastodon.android.api.session.AccountSession;
 import org.joinmastodon.android.api.session.AccountSessionManager;
-import org.joinmastodon.android.events.SelfUpdateStateChangedEvent;
 import org.joinmastodon.android.model.Instance;
 import org.joinmastodon.android.model.viewmodel.ListItem;
 import org.joinmastodon.android.ui.sheets.AccountSwitcherSheet;
 import org.joinmastodon.android.ui.M3AlertDialogBuilder;
 import org.joinmastodon.android.ui.utils.HideableSingleViewRecyclerAdapter;
-import org.joinmastodon.android.ui.utils.UiUtils;
-import org.joinmastodon.android.updater.GithubSelfUpdater;
 
 import java.util.List;
 
@@ -33,18 +27,7 @@ public class SettingsMainFragment extends BaseSettingsFragment<Void>{
 	private AccountSession account;
 	private boolean loggedOut;
 	private HideableSingleViewRecyclerAdapter bannerAdapter;
-	private Button updateButton1, updateButton2;
 	private TextView updateText;
-	private Runnable updateDownloadProgressUpdater=new Runnable(){
-		@Override
-		public void run(){
-			GithubSelfUpdater.UpdateState state=GithubSelfUpdater.getInstance().getState();
-			if(state==GithubSelfUpdater.UpdateState.DOWNLOADING){
-				updateButton1.setText(getString(R.string.downloading_update, Math.round(GithubSelfUpdater.getInstance().getDownloadProgress()*100f)));
-				list.postDelayed(this, 250);
-			}
-		}
-	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -100,12 +83,8 @@ public class SettingsMainFragment extends BaseSettingsFragment<Void>{
 		updateText=banner.findViewById(R.id.text);
 		TextView bannerTitle=banner.findViewById(R.id.title);
 		ImageView bannerIcon=banner.findViewById(R.id.icon);
-		updateButton1=banner.findViewById(R.id.button);
-		updateButton2=banner.findViewById(R.id.button2);
 		bannerAdapter=new HideableSingleViewRecyclerAdapter(banner);
 		bannerAdapter.setVisible(false);
-		updateButton1.setOnClickListener(this::onUpdateButtonClick);
-		updateButton2.setOnClickListener(this::onUpdateButtonClick);
 
 		bannerTitle.setText(R.string.app_update_ready);
 		bannerIcon.setImageResource(R.drawable.ic_fluent_phone_update_24_regular);
@@ -119,9 +98,6 @@ public class SettingsMainFragment extends BaseSettingsFragment<Void>{
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState){
 		super.onViewCreated(view, savedInstanceState);
-		if(GithubSelfUpdater.needSelfUpdating()){
-			updateUpdateBanner();
-		}
 	}
 
 	private Bundle makeFragmentArgs(){
@@ -173,48 +149,5 @@ public class SettingsMainFragment extends BaseSettingsFragment<Void>{
 				}))
 				.setNegativeButton(R.string.cancel, null)
 				.show();
-	}
-
-	@Subscribe
-	public void onSelfUpdateStateChanged(SelfUpdateStateChangedEvent ev){
-		updateUpdateBanner();
-	}
-
-	private void updateUpdateBanner(){
-		GithubSelfUpdater.UpdateState state=GithubSelfUpdater.getInstance().getState();
-		if(state==GithubSelfUpdater.UpdateState.NO_UPDATE || state==GithubSelfUpdater.UpdateState.CHECKING){
-			bannerAdapter.setVisible(false);
-		}else{
-			bannerAdapter.setVisible(true);
-			updateText.setText(getString(R.string.app_update_version, GithubSelfUpdater.getInstance().getUpdateInfo().version));
-			if(state==GithubSelfUpdater.UpdateState.UPDATE_AVAILABLE){
-				updateButton2.setVisibility(View.GONE);
-				updateButton1.setEnabled(true);
-				updateButton1.setText(getString(R.string.download_update, UiUtils.formatFileSize(getActivity(), GithubSelfUpdater.getInstance().getUpdateInfo().size, true)));
-			}else if(state==GithubSelfUpdater.UpdateState.DOWNLOADING){
-				updateButton2.setVisibility(View.VISIBLE);
-				updateButton2.setText(R.string.cancel);
-				updateButton1.setEnabled(false);
-				list.removeCallbacks(updateDownloadProgressUpdater);
-				updateDownloadProgressUpdater.run();
-			}else if(state==GithubSelfUpdater.UpdateState.DOWNLOADED){
-				updateButton2.setVisibility(View.GONE);
-				updateButton1.setEnabled(true);
-				updateButton1.setText(R.string.install_update);
-			}
-		}
-	}
-
-	private void onUpdateButtonClick(View v){
-		if(v.getId()==R.id.button){
-			GithubSelfUpdater.UpdateState state=GithubSelfUpdater.getInstance().getState();
-			if(state==GithubSelfUpdater.UpdateState.UPDATE_AVAILABLE){
-				GithubSelfUpdater.getInstance().downloadUpdate();
-			}else if(state==GithubSelfUpdater.UpdateState.DOWNLOADED){
-				GithubSelfUpdater.getInstance().installUpdate(getActivity());
-			}
-		}else if(v.getId()==R.id.button2){
-			GithubSelfUpdater.getInstance().cancelDownload();
-		}
 	}
 }

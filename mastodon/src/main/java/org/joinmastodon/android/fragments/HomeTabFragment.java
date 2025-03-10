@@ -48,7 +48,6 @@ import org.joinmastodon.android.api.session.AccountSessionManager;
 import org.joinmastodon.android.events.HashtagUpdatedEvent;
 import org.joinmastodon.android.events.ListDeletedEvent;
 import org.joinmastodon.android.events.ListUpdatedCreatedEvent;
-import org.joinmastodon.android.events.SelfUpdateStateChangedEvent;
 import org.joinmastodon.android.fragments.settings.SettingsMainFragment;
 import org.joinmastodon.android.model.Announcement;
 import org.joinmastodon.android.model.Hashtag;
@@ -57,7 +56,6 @@ import org.joinmastodon.android.model.FollowList;
 import org.joinmastodon.android.model.TimelineDefinition;
 import org.joinmastodon.android.ui.SimpleViewHolder;
 import org.joinmastodon.android.ui.utils.UiUtils;
-import org.joinmastodon.android.updater.GithubSelfUpdater;
 import org.joinmastodon.android.utils.ElevationOnScrollListener;
 import org.joinmastodon.android.utils.ProvidesAssistContent;
 
@@ -263,10 +261,6 @@ public class HomeTabFragment extends MastodonToolbarFragment implements Scrollab
 		}
 
 		elevationOnScrollListener = new ElevationOnScrollListener((FragmentRootLinearLayout) view, getToolbar());
-
-		if(GithubSelfUpdater.needSelfUpdating()){
-			updateUpdateState(GithubSelfUpdater.getInstance().getState());
-		}
 
 		new GetLists().setCallback(new Callback<>() {
 			@Override
@@ -630,20 +624,6 @@ public class HomeTabFragment extends MastodonToolbarFragment implements Scrollab
 			announcementsAction.setVisible(false);
 		}
 	}
-
-	private void updateUpdateState(GithubSelfUpdater.UpdateState state){
-		if(state!=GithubSelfUpdater.UpdateState.NO_UPDATE && state!=GithubSelfUpdater.UpdateState.CHECKING) {
-			settingsBadged = true;
-			settingsAction.setVisible(true);
-			settings.setVisible(false);
-		}
-	}
-
-	@Subscribe
-	public void onSelfUpdateStateChanged(SelfUpdateStateChangedEvent ev){
-		updateUpdateState(ev.state);
-	}
-
 	@Override
 	public boolean onBackPressed(){
 		if(pager.getCurrentItem() > 0){
@@ -663,9 +643,6 @@ public class HomeTabFragment extends MastodonToolbarFragment implements Scrollab
 		if (switcherPopup != null) {
 			switcherPopup.dismiss();
 			switcherPopup = null;
-		}
-		if(GithubSelfUpdater.needSelfUpdating()){
-			E.unregister(this);
 		}
 	}
 

@@ -141,6 +141,7 @@ public class SettingsDisplayFragment extends BaseSettingsFragment<Void>{
 		GlobalUserPreferences.displayPronounsInThreads=pronounsInThreadsItem.checked;
 		GlobalUserPreferences.displayPronounsInUserListings=pronounsInUserListingsItem.checked;
 		GlobalUserPreferences.showMediaPreview=showMediaPreviewItem.checked;
+		GlobalUserPreferences.hideSensitiveMedia=hideSensitiveMediaItem.checked;
 		GlobalUserPreferences.save();
 		if(restartPlease) restartActivityToApplyNewTheme();
 		else E.post(new StatusDisplaySettingsChangedEvent(accountID));

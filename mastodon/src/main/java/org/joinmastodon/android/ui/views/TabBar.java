@@ -2,6 +2,9 @@ package org.joinmastodon.android.ui.views;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -45,6 +48,16 @@ public class TabBar extends LinearLayout{
 
 	private void onChildClick(View v){
 		listener.accept(v.getId());
+		//TODO: Refactor this into an utility method
+		Vibrator vibrator = v.getContext().getSystemService(Vibrator.class);
+		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+			vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK));
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			VibrationEffect effect = VibrationEffect.createOneShot(75L, 128);
+			vibrator.vibrate(effect);
+		} else {
+			vibrator.vibrate(75L);
+		}
 		if(v.getId()==selectedTabID)
 			return;
 		selectTab(v.getId());

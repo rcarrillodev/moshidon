@@ -3,7 +3,6 @@ package org.joinmastodon.android.fragments.settings;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.joinmastodon.android.GlobalUserPreferences;
 import org.joinmastodon.android.api.session.AccountActivationInfo;
 import org.joinmastodon.android.api.session.AccountSession;
 import org.joinmastodon.android.api.session.AccountSessionManager;
@@ -11,7 +10,6 @@ import org.joinmastodon.android.fragments.HomeFragment;
 import org.joinmastodon.android.fragments.onboarding.AccountActivationFragment;
 import org.joinmastodon.android.model.viewmodel.ListItem;
 import org.joinmastodon.android.ui.utils.DiscoverInfoBannerHelper;
-import org.joinmastodon.android.updater.GithubSelfUpdater;
 
 import java.util.List;
 
@@ -30,10 +28,6 @@ public class SettingsDebugFragment extends BaseSettingsFragment<Void>{
 				new ListItem<>("Reset search info banners", null, this::onResetDiscoverBannersClick),
 				new ListItem<>("Reset pre-reply sheets", null, this::onResetPreReplySheetsClick)
 		));
-		if(!GithubSelfUpdater.needSelfUpdating()){
-			resetUpdateItem.isEnabled=selfUpdateItem.isEnabled=false;
-			selfUpdateItem.subtitle="Self-updater is unavailable in this build flavor";
-		}
 	}
 
 	@Override
@@ -50,13 +44,10 @@ public class SettingsDebugFragment extends BaseSettingsFragment<Void>{
 	}
 
 	private void onForceSelfUpdateClick(ListItem<?> item){
-		GithubSelfUpdater.forceUpdate=true;
-		GithubSelfUpdater.getInstance().maybeCheckForUpdates();
 		restartUI();
 	}
 
 	private void onResetUpdaterClick(ListItem<?> item){
-		GithubSelfUpdater.getInstance().reset();
 		restartUI();
 	}
 
