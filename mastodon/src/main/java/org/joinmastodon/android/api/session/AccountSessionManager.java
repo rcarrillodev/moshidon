@@ -34,6 +34,7 @@ import org.joinmastodon.android.model.EmojiCategory;
 import org.joinmastodon.android.model.LegacyFilter;
 import org.joinmastodon.android.model.Instance;
 import org.joinmastodon.android.model.Token;
+import org.joinmastodon.android.utils.UnifiedPushHelper;
 import org.unifiedpush.android.connector.UnifiedPush;
 
 import java.io.File;
@@ -70,7 +71,6 @@ public class AccountSessionManager{
 	private HashMap<String, List<EmojiCategory>> customEmojis=new HashMap<>();
 	private HashMap<String, Long> instancesLastUpdated=new HashMap<>();
 	private HashMap<String, Instance> instances=new HashMap<>();
-	private MastodonAPIController unauthenticatedApiController=new MastodonAPIController(null);
 	private Instance authenticatingInstance;
 	private Application authenticatingApp;
 	private String lastActiveAccountID;
@@ -109,7 +109,7 @@ public class AccountSessionManager{
 			Log.e(TAG, "Error loading accounts", x);
 		}
 		lastActiveAccountID=prefs.getString("lastActiveAccount", null);
-		MastodonAPIController.runInBackground(()->readInstanceInfo(domains));
+		readInstanceInfo(domains);
 		maybeUpdateShortcuts();
 	}
 
@@ -127,12 +127,12 @@ public class AccountSessionManager{
 		MastodonAPIController.runInBackground(()->writeInstanceInfoFile(wrapper, instance.uri));
 
 		updateMoreInstanceInfo(instance, instance.uri);
-		if (!UnifiedPush.getDistributor(context).isEmpty()) {
-			UnifiedPush.registerApp(
+		if (UnifiedPushHelper.isUnifiedPushEnabled(context)) {
+			UnifiedPush.register(
 					context,
 					session.getID(),
-					new ArrayList<>(),
-					context.getPackageName()
+					null,
+					session.app.vapidKey.replaceAll("=","")
 			);
 		} else if(PushSubscriptionManager.arePushNotificationsAvailable()){
 			session.getPushSubscriptionManager().registerAccountForPush(null);
@@ -245,11 +245,6 @@ public class AccountSessionManager{
 			nm.deleteNotificationChannelGroup(id);
 		}
 		maybeUpdateShortcuts();
-	}
-
-	@NonNull
-	public MastodonAPIController getUnauthenticatedApiController(){
-		return unauthenticatedApiController;
 	}
 
 	public void authenticate(Activity activity, Instance instance){

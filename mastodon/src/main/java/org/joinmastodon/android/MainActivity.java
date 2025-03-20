@@ -5,13 +5,20 @@ import static org.joinmastodon.android.fragments.ComposeFragment.CAMERA_PERMISSI
 import android.Manifest;
 import android.app.Fragment;
 import android.app.assist.AssistContent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.net.Uri;
 import android.os.BadParcelableException;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -326,5 +333,21 @@ public class MainActivity extends FragmentStackActivity implements ProvidesAssis
 				maybeRequestNotificationsPermission();
 			}
 		}
+	}
+
+	@Override
+	protected void attachBaseContext(Context base) {
+		if (!GlobalUserPreferences.enhanceTextSize) {
+			super.attachBaseContext(base);
+			return;
+		}
+
+		final Configuration override = new Configuration(base.getResources().getConfiguration());
+
+		// This is the font multiplier, which should be multiplied by, because the system settings also play a role here
+		override.fontScale *= 1.15f;
+		final Context newBase = base.createConfigurationContext(override);
+
+		super.attachBaseContext(newBase);
 	}
 }

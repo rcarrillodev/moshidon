@@ -82,6 +82,7 @@ public class GlobalUserPreferences{
 	public static boolean showMediaPreview;
 	public static boolean removeTrackingParams;
 	public static boolean hideSensitiveMedia;
+	public static boolean enhanceTextSize;
 
 	public static SharedPreferences getPrefs(){
 		return MastodonApp.context.getSharedPreferences("global", Context.MODE_PRIVATE);
@@ -164,9 +165,9 @@ public class GlobalUserPreferences{
 		showPostsWithoutAlt=prefs.getBoolean("showPostsWithoutAlt", true);
 		showMediaPreview=prefs.getBoolean("showMediaPreview", true);
 		removeTrackingParams=prefs.getBoolean("removeTrackingParams", true);
+		enhanceTextSize=prefs.getBoolean("enhanceTextSize", false);
 
 		theme=ThemePreference.values()[prefs.getInt("theme", 0)];
-
 
 		if (prefs.contains("prefixRepliesWithRe")) {
 			prefixReplies = prefs.getBoolean("prefixRepliesWithRe", false)
@@ -240,6 +241,7 @@ public class GlobalUserPreferences{
 				.putBoolean("showPostsWithoutAlt", showPostsWithoutAlt)
 				.putBoolean("showMediaPreview", showMediaPreview)
 				.putBoolean("removeTrackingParams", removeTrackingParams)
+				.putBoolean("enhanceTextSize", enhanceTextSize)
 
 				.apply();
 	}

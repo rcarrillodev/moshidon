@@ -113,7 +113,7 @@ public class HeaderStatusDisplayItem extends StatusDisplayItem{
 	}
 
 	public static HeaderStatusDisplayItem fromAnnouncement(Announcement a, Status fakeStatus, Account instanceUser, BaseStatusListFragment parentFragment, String accountID, Consumer<String> consumeReadID) {
-		HeaderStatusDisplayItem item = new HeaderStatusDisplayItem(a.id, instanceUser, a.startsAt, parentFragment, accountID, fakeStatus, null, null, null);
+		HeaderStatusDisplayItem item = new HeaderStatusDisplayItem(a.id, instanceUser, a.startsAt!=null ? a.startsAt : fakeStatus.createdAt, parentFragment, accountID, fakeStatus, null, null, null);
 		item.announcement = a;
 		item.consumeReadAnnouncement = consumeReadID;
 		return item;
@@ -279,7 +279,7 @@ public class HeaderStatusDisplayItem extends StatusDisplayItem{
 						Toast.makeText(activity, activity.getString(rel.following ? R.string.followed_user : rel.requested ? R.string.following_user_requested : R.string.unfollowed_user, account.getDisplayUsername()), Toast.LENGTH_SHORT).show();
 					});
 				}else if(id==R.id.block_domain){
-					UiUtils.confirmToggleBlockDomain(activity, item.parentFragment.getAccountID(), account.getDomain(), relationship!=null && relationship.domainBlocking, ()->{});
+					UiUtils.confirmToggleBlockDomain(activity, item.parentFragment.getAccountID(), account, relationship!=null && relationship.domainBlocking, ()->{});
 				}else if(id==R.id.bookmark){
 					AccountSessionManager.getInstance().getAccount(item.accountID).getStatusInteractionController().setBookmarked(item.status, !item.status.bookmarked);
 				}else if(id==R.id.manage_user_lists){

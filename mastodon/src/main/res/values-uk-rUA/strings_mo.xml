@@ -6,7 +6,7 @@
     <string name="mo_color_palette_nord">Nord</string>
     <string name="mo_disable_dividers">Вимкнути роздільники публікацій</string>
     <string name="mo_relocate_publish_button">Перемістити кнопку «Опублікувати»</string>
-    <string name="mo_hide_compose_button_while_scrolling_setting">Сховати кнопку «Нова публікація» під час прокручування</string>
+    <string name="mo_hide_compose_button_while_scrolling_setting">Сховати кнопку «Новий допис» під час прокручування</string>
     <string name="mo_personal_note">Додати нотатку до цього профілю</string>
     <string name="mo_personal_note_confirm">Підтвердити зміни</string>
     <string name="mo_personal_note_update_failed">Не вдалося зберегти нотатку</string>
@@ -34,7 +34,7 @@
     <string name="mo_download_latest_nightly_release">Встановити останній нічний реліз</string>
     <string name="mo_notification_action_replied">Успішно надіслано відповідь на публікацію від %s</string>
     <string name="mo_change_default_reply_visibility_to_unlisted">За замовчуванням відповідати як «Прихований»</string>
-    <string name="mo_composer_behavior">Поведінка екрану створення публікації</string>
+    <string name="mo_composer_behavior">Поведінка екрана створення публікації</string>
     <string name="mo_miscellaneous_settings">Інші Налаштування</string>
     <string name="mo_duration_minutes_5">5 хвилин</string>
     <string name="mo_disable_double_tap_to_swipe_between_tabs">Вимкнути подвійне тицяння для перемикання між вкладками</string>
@@ -116,4 +116,5 @@
     <string name="mo_mute_hashtag">Заблокувати хештег</string>
     <string name="mo_unmute_hashtag">Розблокувати хештег</string>
     <string name="mo_confirm_to_unmute_hashtag">Ви впевнені що хочете розблокувати цей хештег?</string>
+    <string name="mo_personal_note_saved">Нотатку збережено</string>
 </resources>
